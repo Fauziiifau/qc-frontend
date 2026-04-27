@@ -1,0 +1,173 @@
+@import "tailwindcss";
+
+/* Tell Tailwind v4 to use html.dark class for dark mode instead of OS preference */
+@variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-slate-850: #141e33;
+}
+
+body {
+  background-color: #f1f5f9;
+  color: #1e293b;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+html.dark body {
+  background-color: #0f172a;
+  color: #f1f5f9;
+}
+
+/* White cards → dark slate */
+html.dark .bg-white {
+  background-color: #1e293b !important;
+  /* slate-800 */
+}
+
+/* Slate-50 inputs/backgrounds → slightly lighter slate */
+html.dark .bg-slate-50 {
+  background-color: #0f172a !important;
+  /* slate-900 */
+}
+
+/* Slate-100 card variants → dark */
+html.dark .bg-slate-100 {
+  background-color: #1e293b !important;
+}
+
+/* Borders */
+html.dark .border-slate-100 {
+  border-color: #334155 !important;
+  /* slate-700 */
+}
+
+html.dark .border-slate-200 {
+  border-color: #334155 !important;
+}
+
+/* Table / divider lines */
+html.dark .divide-slate-100> :not([hidden])~ :not([hidden]) {
+  border-color: #334155 !important;
+}
+
+/* Text colors */
+html.dark .text-slate-800 {
+  color: #f1f5f9 !important;
+  /* slate-100 */
+}
+
+html.dark .text-slate-700 {
+  color: #cbd5e1 !important;
+  /* slate-300 */
+}
+
+html.dark .text-slate-600 {
+  color: #94a3b8 !important;
+  /* slate-400 */
+}
+
+/* Table head */
+html.dark .bg-slate-50\/50 {
+  background-color: rgba(15, 23, 42, 0.5) !important;
+}
+
+/* Form inputs & selects with bg-white or bg-slate-50 borders */
+html.dark input,
+html.dark select,
+html.dark textarea {
+  background-color: #0f172a !important;
+  color: #e2e8f0 !important;
+  border-color: #475569 !important;
+}
+
+/* Placeholder text */
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+  color: #64748b !important;
+}
+
+/* Footer / bottom bar of forms */
+html.dark .bg-slate-50:not(input):not(select) {
+  background-color: #1e293b !important;
+}
+
+/* Skeleton in dark mode: use slate-700/600 instead of slate-100/200 */
+html.dark .skeleton {
+  background: linear-gradient(90deg,
+      #334155 25%,
+      #475569 37%,
+      #334155 63%) !important;
+  background-size: 400% 100% !important;
+}
+
+/* --- Shimmer sweep on KPI cards (always-on subtle shine) --- */
+.shimmer-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(to right,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.55) 50%,
+      rgba(255, 255, 255, 0) 100%);
+  transform: skewX(-25deg);
+  animation: shimmer-sweep 3.5s infinite;
+  z-index: 10;
+  pointer-events: none;
+}
+
+@keyframes shimmer-sweep {
+  0% {
+    left: -150%;
+  }
+
+  60% {
+    left: 250%;
+  }
+
+  100% {
+    left: 250%;
+  }
+}
+
+/* --- Skeleton shimmer for loading placeholders --- */
+.skeleton {
+  background: linear-gradient(90deg,
+      #f1f5f9 25%,
+      #e2e8f0 37%,
+      #f1f5f9 63%);
+  background-size: 400% 100%;
+  animation: skeleton-loading 1.4s ease infinite;
+  border-radius: 6px;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes spin-superslow {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-superslow {
+  animation: spin-superslow 60s linear infinite;
+}
