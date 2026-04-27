@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
-// ---> 1. KITA IMPORT ICON YANG HILANG <---
 import { Search, Save, CheckCircle } from 'lucide-react';
 import { saveBatchProduction } from '../services/productionService';
 import { getAllParts, getMasterMachines } from '../services/masterDataService';
@@ -10,14 +9,10 @@ const getTodayDate = () => new Date().toISOString().split('T')[0];
 function InputProduction() {
     const [isLoading, setIsLoading] = useState(false);
     const [isFetchingMaster, setIsFetchingMaster] = useState(true);
-
     const [allMasterParts, setAllMasterParts] = useState([]);
     const [allMasterMachines, setAllMasterMachines] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
-
-    // ---> 2. STATE UNTUK MODAL KONFIRMASI <---
     const [confirmModal, setConfirmModal] = useState(false);
-
     const [header, setHeader] = useState({
         productionDate: getTodayDate(),
         shift: 'Shift 1',
@@ -70,7 +65,6 @@ function InputProduction() {
         setGridData(newData);
     };
 
-    // ---> 3. FUNGSI VALIDASI DAN BUKA MODAL <---
     const handlePreSubmit = () => {
         const validItems = gridData.filter(item => {
             const hasPart = item.partId !== '';
@@ -88,12 +82,11 @@ function InputProduction() {
             return;
         }
 
-        setConfirmModal(true); // Buka modal jika validasi lolos
+        setConfirmModal(true);
     };
 
-    // ---> 4. FUNGSI SIMPAN KE SERVER <---
     const submitData = async () => {
-        setConfirmModal(false); // Tutup modal
+        setConfirmModal(false);
         setIsLoading(true);
 
         const validItems = gridData.filter(item => {
@@ -290,7 +283,6 @@ function InputProduction() {
                 </div>
             </div>
 
-            {/* ---> 5. MODAL KONFIRMASI (TEKS SAJA) <--- */}
             {confirmModal && (
                 <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
                     <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 md:p-8 w-full max-w-md shadow-2xl border border-slate-200 dark:border-slate-700">
@@ -320,5 +312,4 @@ function InputProduction() {
         </div>
     );
 }
-
 export default InputProduction;

@@ -122,8 +122,6 @@ function InputDefect() {
 
         <form onSubmit={handlePreSubmit} className="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 space-y-6 transition-all">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-            {/* Pencarian Part */}
             <div className="relative">
               <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-2">
                 <Search size={16} /> Cari Part Number / Nama *
@@ -159,7 +157,6 @@ function InputDefect() {
               )}
             </div>
 
-            {/* Jenis Cacat */}
             <div>
               <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Jenis Cacat (Defect Type) *</label>
               <select
@@ -190,31 +187,25 @@ function InputDefect() {
               </select>
             </div>
 
-            {/* Jumlah */}
             <div>
               <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Jumlah (Quantity) *</label>
               <input type="number" min="1" className="w-full p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-slate-800 dark:text-white" placeholder="Contoh: 5" value={formData.quantity} onChange={(e) => setFormData({ ...formData, quantity: e.target.value })} required />
             </div>
 
-            {/* Tanggal Produksi */}
             <div>
               <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Tanggal Produksi *</label>
               <input type="date" className="w-full p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none cursor-pointer text-slate-800 dark:text-white" value={formData.defectDate} onChange={(e) => setFormData({ ...formData, defectDate: e.target.value })} required />
             </div>
-
-            {/* Nama Operator */}
             <div>
               <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Nama Operator *</label>
               <input type="text" className="w-full p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-slate-800 dark:text-white" placeholder="Nama Operator Produksi" value={formData.operatorName} onChange={(e) => setFormData({ ...formData, operatorName: e.target.value })} required />
             </div>
 
-            {/* Catatan (Full Width) */}
             <div className="md:col-span-2">
               <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Catatan Tambahan</label>
               <input type="text" className="w-full p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-slate-800 dark:text-white" placeholder="Detail lokasi cacat..." value={formData.remarks} onChange={(e) => setFormData({ ...formData, remarks: e.target.value })} />
             </div>
 
-            {/* Upload Bukti Foto */}
             <div className="md:col-span-2">
               <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Upload Bukti Foto</label>
               {!photoPreview ? (
@@ -243,7 +234,6 @@ function InputDefect() {
         </form>
       </div>
 
-      {/*Notifikasi*/}
       {confirmModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
           <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 md:p-8 w-full max-w-md shadow-2xl border border-slate-200 dark:border-slate-700">
@@ -270,7 +260,6 @@ function InputDefect() {
           </div>
         </div>
       )}
-
     </div>
   );
 }

@@ -135,24 +135,20 @@ function InputComplaint() {
                         <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Catat laporan retur atau komplain kualitas beserta bukti foto.</p>
                     </div>
                 </div>
-
+                {/* FORM INPUT KOMPLAIN */}
                 <form onSubmit={handlePreSubmit} className="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 space-y-6 transition-all">
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-                        {/* TANGGAL */}
                         <div>
                             <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2"> Tanggal Klaim / Retur *</label>
                             <input type="date" className="w-full p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none cursor-pointer text-slate-800 dark:text-white" value={formData.complaintDate} onChange={(e) => setFormData({ ...formData, complaintDate: e.target.value })} required />
                         </div>
 
-                        {/* CUSTOMER */}
                         <div>
                             <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2"> Nama Customer *</label>
                             <input type="text" placeholder="Contoh: PT. Roda Prima Lancar" className="w-full p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-slate-800 dark:text-white" value={formData.customerName} onChange={(e) => setFormData({ ...formData, customerName: e.target.value })} required />
                         </div>
 
-                        {/* CARI PART */}
                         <div className="relative">
                             <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2"> Cari Nama Part / Number *</label>
                             <input
@@ -185,7 +181,6 @@ function InputComplaint() {
                             )}
                         </div>
 
-                        {/* CARI JENIS CACAT */}
                         <div className="relative">
                             <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2"> Cari Jenis Cacat *</label>
                             <input
@@ -217,19 +212,16 @@ function InputComplaint() {
                             )}
                         </div>
 
-                        {/* LOT NUMBER */}
                         <div>
                             <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2"> No. Lot Produksi *</label>
                             <input type="text" placeholder="Untuk pelacakan traceability..." className="w-full p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-slate-800 dark:text-white" value={formData.lotNumber} onChange={(e) => setFormData({ ...formData, lotNumber: e.target.value })} required />
                         </div>
 
-                        {/* JUMLAH */}
                         <div>
                             <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2"> Jumlah NG (Qty Retur) *</label>
                             <input type="number" min="1" placeholder="Jumlah Quantity" className="w-full p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-slate-800 dark:text-white" value={formData.defectQuantity} onChange={(e) => setFormData({ ...formData, defectQuantity: e.target.value })} required />
                         </div>
 
-                        {/* DESKRIPSI MASALAH */}
                         <div className="md:col-span-2">
                             <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2"> Deskripsi Masalah *</label>
                             <input type="text" placeholder="Deskripsi Masalah " className="w-full p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-slate-800 dark:text-white" value={formData.problemDescription} onChange={(e) => setFormData({ ...formData, problemDescription: e.target.value })} required />
@@ -237,7 +229,6 @@ function InputComplaint() {
 
                     </div>
 
-                    {/* FOTO */}
                     <div>
                         <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Upload Bukti Foto</label>
 

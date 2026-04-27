@@ -202,7 +202,6 @@ function Dashboard() {
                 const topDefect = mergedPareto[0].defectName;
 
                 try {
-                    // 👇 PERUBAHAN PAYLOAD: Sekarang hanya mengambil dan mengirim 'proses'
                     const contextResponse = await api.get(`/ai/get-context?defectName=${topDefect}`);
                     const { proses } = contextResponse.data;
 
@@ -525,7 +524,7 @@ function Dashboard() {
                                     </div>
                                 )}
 
-                                {/* DATA DIPISAH BERDASARKAN DATASET */}
+                                {/* DATASET */}
                                 {activeDefectTab === 'data' && (
                                     <div>
                                         <div className="mb-6 flex items-start justify-between">
@@ -609,7 +608,6 @@ function Dashboard() {
                                                 </div>
 
                                                 <div className="p-5 md:p-6 space-y-4">
-                                                    {/* 1. BAGIAN DETEKSI MASALAH (Dari Java) */}
                                                     {aiInsights.length > 0 && (
                                                         <div className="space-y-3">
                                                             {aiInsights.map((insight, index) => {
@@ -649,7 +647,6 @@ function Dashboard() {
                                                         </div>
                                                     )}
 
-                                                    {/* 2. BAGIAN SOLUSI PAKAR (Dari Python ML) */}
                                                     {mergedPareto.length > 0 && (
                                                         <div className="pt-2">
                                                             <div className="p-5 rounded-xl border border-indigo-200 dark:border-indigo-800/50 bg-indigo-50/50 dark:bg-indigo-900/20 relative overflow-hidden">

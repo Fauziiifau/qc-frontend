@@ -134,8 +134,6 @@ function MasterData() {
                         <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Kelola data untuk Part, Mesin, dan Jenis Defect.</p>
                     </div>
                 </div>
-
-                {/* TABS */}
                 <div className="flex gap-2 p-1 bg-slate-100 dark:bg-slate-900/50 rounded-xl overflow-x-auto w-fit border border-slate-200 dark:border-slate-800">
                     <button onClick={() => setActiveTab('parts')} className={`px-5 py-2.5 rounded-lg text-sm font-bold flex items-center gap-2 transition-all whitespace-nowrap ${activeTab === 'parts' ? 'bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm border border-slate-200 dark:border-slate-600' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'}`}>
                         Data Part (Produk)

@@ -50,8 +50,6 @@ function Profile() {
     return (
         <div className="p-6 md:p-8 transition-colors duration-300 relative">
             <div className="max-w-4xl mx-auto space-y-6">
-
-                {/* HEADER KARTU PROFIL */}
                 <div className="bg-white dark:bg-slate-800/90 p-6 md:p-8 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row items-center sm:items-start gap-6 transition-all">
                     <div className="w-24 h-24 rounded-full bg-blue-600 text-white flex items-center justify-center text-4xl font-black shadow-xl shadow-blue-500/30 uppercase shrink-0 border-4 border-white dark:border-slate-800">
                         {formData.username.charAt(0)}
@@ -64,8 +62,6 @@ function Profile() {
                         </div>
                     </div>
                 </div>
-
-                {/* FORM EDIT DATA */}
                 <form onSubmit={handleSave} className="bg-white dark:bg-slate-800/90 p-6 md:p-8 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-700 space-y-6 transition-all">
 
                     <h3 className="text-lg font-bold text-slate-800 dark:text-white border-b border-slate-100 dark:border-slate-700 pb-4">Informasi Akun</h3>

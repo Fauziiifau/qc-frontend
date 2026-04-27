@@ -89,19 +89,16 @@ function Reports() {
     return (
         <div className="p-6 md:p-8">
             <div className="max-w-4xl mx-auto space-y-6">
-                {/* HEADER */}
                 <div className="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-100 transition-all">
                     <div>
                         <h1 className="text-2xl font-bold text-slate-800 dark:text-white tracking-tight">Export Laporan Defect Product dan Laporan Produksi</h1>
                         <p className="text-sm text-slate-400 mt-1">Export quality control analytics.</p>
                     </div>
                 </div>
-                {/* FORM CARD */}
                 <div className="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-100 transition-all">
                     <h2 className="text-lg font-bold text-slate-800 mb-6">Generate Custom Report</h2>
 
                     <form onSubmit={handleDownload} className="space-y-6">
-                        {/* ROW 1: DATES */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label className="block text-sm font-bold text-slate-700 mb-2 flex items-center gap-2">
@@ -130,7 +127,6 @@ function Reports() {
                                 />
                             </div>
                         </div>
-                        {/* ROW 2: REPORT TYPE */}
                         <div>
                             <label className="block text-sm font-bold text-slate-700 mb-2 flex items-center gap-2">
                                 Report Type
@@ -145,7 +141,6 @@ function Reports() {
                                 <option value="production">Laporan Produksi</option>
                             </select>
                         </div>
-                        {/* ROW 3: FORMAT (RADIO BUTTONS) */}
                         <div>
                             <label className="block text-sm font-bold text-slate-700 mb-3">Format Laporan</label>
                             <div className="flex flex-col sm:flex-row gap-4 sm:gap-8">
@@ -184,8 +179,6 @@ function Reports() {
                                 </label>
                             </div>
                         </div>
-
-                        {/* ROW 4: BUTTONS */}
                         <div className="pt-6 mt-6 border-t border-slate-100 flex items-center gap-4">
                             <button
                                 type="submit"

@@ -143,7 +143,6 @@ function Layout() {
         <Outlet />
       </div>
 
-      {/* Off-Canvas Sidebar Overlay */}
       {isSidebarOpen && (
         <div
           className={`fixed inset-0 ${sidebarOverlay} backdrop-blur-sm z-40 transition-opacity`}
