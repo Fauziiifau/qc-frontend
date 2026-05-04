@@ -4,7 +4,7 @@ import { ThemeProvider } from './context/ThemeContext';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
-import Layout from './components/layout';
+import Layout from './components/Layout';
 import InputDefect from './pages/InputDefect';
 import InputProduction from './pages/InputProduction';
 import InputComplaint from './pages/InputComplaint';
