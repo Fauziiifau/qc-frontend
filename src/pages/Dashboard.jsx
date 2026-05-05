@@ -174,9 +174,13 @@ function Dashboard() {
                 combined.sort((a, b) => b.totalQuantity - a.totalQuantity);
                 let running = 0;
                 const grand = combined.reduce((s, i) => s + i.totalQuantity, 0);
+
                 setMergedPareto(combined.map(i => {
                     running += i.totalQuantity;
-                    return { ...i, cumulativePercentage: grand > 0 ? parseFloat(((running / grand) * 100).toFixed(1)) : 0 };
+                    return {
+                        ...i,
+                        cumulativePercentage: grand > 0 ? parseFloat(((running / grand) * 100).toFixed(1)) : 0
+                    };
                 }));
 
                 setIsLoadingInsights(true);
