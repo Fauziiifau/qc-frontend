@@ -135,6 +135,9 @@ function Dashboard() {
     const [endDate, setEndDate] = useState(() => new Date().toISOString().split('T')[0]);
 
     useEffect(() => {
+        if (!startDate || !endDate) {
+            return;
+        }
         const fetchDashboardData = async () => {
             try {
                 setIsLoading(true);
