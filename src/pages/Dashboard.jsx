@@ -160,8 +160,14 @@ function Dashboard() {
                 ]));
 
                 let combined = allDefectNames.map(name => {
-                    const intQty = (paretoRes || []).find(d => d.defectName === name)?.totalQuantity || 0;
-                    const custQty = (compParetoRes || []).find(d => d.defectName === name)?.totalQuantity || 0;
+                    const intQty = (paretoRes || [])
+                        .filter(d => d.defectName === name)
+                        .reduce((sum, item) => sum + (item.totalQuantity || 0), 0);
+
+                    const custQty = (compParetoRes || [])
+                        .filter(d => d.defectName === name)
+                        .reduce((sum, item) => sum + (item.totalQuantity || 0), 0);
+
                     return { defectName: name, totalQuantity: intQty + custQty };
                 });
 
