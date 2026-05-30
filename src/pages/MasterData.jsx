@@ -53,7 +53,8 @@ function MasterData() {
             setPartForm({ partNumber: '', partName: '' });
             fetchAllData();
         } catch (error) {
-            toast.error(error.response?.data || "Gagal menambahkan Part.");
+            const errorMsg = typeof error.response?.data === 'string' ? error.response.data : "Gagal menambahkan Part.";
+            toast.error(errorMsg);
         } finally {
             setIsSubmitting(false);
         }
