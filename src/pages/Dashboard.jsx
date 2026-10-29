@@ -4,8 +4,8 @@ import {
     BarChart3, Wand2, ListFilter, Star, Bug, CheckCircle, Info, Cpu
 } from 'lucide-react';
 import {
-    ComposedChart, BarChart, Bar, Line, XAxis, YAxis, CartesianGrid,
-    Tooltip, Legend, ResponsiveContainer, ReferenceLine
+    BarChart, Bar, XAxis, YAxis, CartesianGrid,
+    Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
 import {
     fetchDashboardSummary,
@@ -15,6 +15,7 @@ import {
     fetchComplaintParetoData
 } from '../services/dashboardService';
 import api from '../api/axiosConfig';
+import ItemParetoChart from '../components/ItemParetoChart';
 
 const DailyBreakdownTable = ({ data }) => {
     return (
@@ -246,17 +247,9 @@ function Dashboard() {
     const currentParetoData = activeDataset === 'internal' ? pareto : complaintPareto;
     const currentTotal = activeDataset === 'internal' ? kpi.totalNg : totalComplaints;
     const currentLabel = activeDataset === 'internal' ? 'Cacat Internal' : 'Komplain';
-    const grandTotalIssues = mergedPareto.reduce((sum, item) => sum + item.totalQuantity, 0);
     const grandTotalQuantity = currentParetoData.reduce((sum, item) => sum + (item.totalQuantity || 0), 0);
     let runningTotalQty = 0;
 
-    let top80Count = 0;
-    let top80Percent = 0;
-    if (mergedPareto.length > 0) {
-        const idx = mergedPareto.findIndex(item => item.cumulativePercentage >= 80);
-        top80Count = idx !== -1 ? idx + 1 : mergedPareto.length;
-        top80Percent = idx !== -1 ? mergedPareto[idx].cumulativePercentage : 100;
-    }
     const dataGrafik = productionData.map(item => ({
         ...item,
         labelUnik: item.shift ? `${item.date} (${item.shift})` : item.date
@@ -435,14 +428,14 @@ function Dashboard() {
                                 <div>
                                     <div className="flex items-center gap-3">
                                         <h3 className="text-xl font-bold text-slate-800 dark:text-white">
-                                            Analisis {activeDefectTab === 'chart' ? 'Gabungan Total' : currentLabel}
+                                            Analisis {activeDefectTab === 'chart' ? 'Pareto per Item' : currentLabel}
                                         </h3>
                                         <span className={`px-2.5 py-1 text-xs font-bold rounded-full ${activeDefectTab === 'chart' ? 'bg-indigo-50 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400' : (activeDataset === 'internal' ? 'bg-blue-50 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400' : 'bg-rose-50 dark:bg-rose-500/20 text-rose-600 dark:text-rose-400')}`}>
-                                            {activeDefectTab === 'chart' ? `${grandTotalIssues} Pcs Defect` : `${currentTotal} ${currentLabel}`}
+                                            {activeDefectTab === 'chart' ? `${kpi.totalNg} Unit NG Internal` : `${currentTotal} ${currentLabel}`}
                                         </span>
                                     </div>
                                     <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-                                        {activeDefectTab === 'chart' ? 'Grafik Gabungan Jenis Cacat dan Komplain Customer' : `Rincian lengkap untuk dataset ${currentLabel}`}
+                                        {activeDefectTab === 'chart' ? 'Peringkat item berdasarkan jumlah jenis defect atau total NG' : `Rincian lengkap untuk dataset ${currentLabel}`}
                                     </p>
                                 </div>
                                 <div className="flex items-center gap-1 bg-slate-50 dark:bg-slate-900/50 p-1 rounded-xl border border-slate-100 dark:border-slate-700">
@@ -460,81 +453,7 @@ function Dashboard() {
 
                             <div className="p-4 md:p-6">
                                 {activeDefectTab === 'chart' && (
-                                    <div>
-                                        <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
-                                            <div>
-                                                <h4 className="text-lg font-bold text-slate-800 dark:text-white">Grafik Pareto</h4>
-                                            </div>
-                                            <div className="flex items-center gap-2 bg-rose-50 dark:bg-rose-500/10 px-3 py-1.5 rounded-full border border-rose-100 dark:border-rose-500/20">
-                                                <div className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></div>
-                                                <span className="text-xs font-bold text-rose-600 dark:text-rose-400 tracking-wide">Aturan 80/20 Aktif</span>
-                                            </div>
-                                        </div>
-
-                                        {mergedPareto.length === 0 ? (
-                                            <div className="h-[400px] w-full flex flex-col items-center justify-center border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-xl text-slate-400 dark:text-slate-500">
-                                                <BarChart3 size={32} className="mb-2 opacity-50" />
-                                                <p className="text-sm font-medium">Belum ada data cacat atau komplain.</p>
-                                            </div>
-                                        ) : (
-                                            <>
-                                                <div className="h-[400px] w-full">
-                                                    <ResponsiveContainer width="100%" height="100%">
-                                                        <ComposedChart data={mergedPareto} margin={{ top: 20, right: 20, bottom: 20, left: 0 }}>
-                                                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#cbd5e1" strokeOpacity={0.3} />
-                                                            <XAxis dataKey="defectName" axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12 }} dy={10} />
-                                                            <YAxis yAxisId="left" axisLine={false} tickLine={false} tick={{ fill: '#64748b' }} />
-                                                            <YAxis yAxisId="right" orientation="right" domain={[0, 100]} axisLine={false} tickLine={false} tick={{ fill: '#64748b' }} tickFormatter={(tick) => `${tick}%`} />
-
-                                                            <Tooltip
-                                                                contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', backgroundColor: '#fff', color: '#0f172a' }}
-                                                                formatter={(value, name) => [name === 'Persentase Kumulatif' ? `${value}%` : value, name]}
-                                                            />
-
-                                                            <Legend wrapperStyle={{ paddingTop: '20px' }} />
-                                                            <ReferenceLine y={80} yAxisId="right" stroke="#ef4444" strokeDasharray="4 4" label={{ position: 'insideBottomRight', value: '80%', fill: '#ef4444', fontSize: 12, fontWeight: 'bold' }} />
-
-                                                            <Bar yAxisId="left" dataKey="totalQuantity" name="Total Jumlah Defect (Gabungan)" fill="#3b82f6" radius={[4, 4, 0, 0]} maxBarSize={60} />
-                                                            <Line yAxisId="right" type="monotone" dataKey="cumulativePercentage" name="Persentase Kumulatif" stroke="#f59e0b" strokeWidth={3} dot={{ r: 4, strokeWidth: 2, fill: 'white' }} activeDot={{ r: 6 }} />
-                                                        </ComposedChart>
-                                                    </ResponsiveContainer>
-                                                </div>
-
-                                                <div className="mt-8 pt-8 border-t border-slate-100 dark:border-slate-700">
-                                                    <div className="flex items-center mb-6">
-                                                        <h4 className="text-xl font-bold text-slate-800 dark:text-white">
-                                                            Total Keseluruhan Cacat: <span className="text-indigo-600 dark:text-indigo-400 ml-1">{grandTotalIssues} Pcs / Unit</span>
-                                                        </h4>
-                                                    </div>
-
-                                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                        <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200/60 dark:border-amber-700/50 rounded-2xl p-5 flex items-start gap-4">
-                                                            <div className="mt-0.5 text-amber-500 dark:text-amber-400 bg-amber-100/50 dark:bg-amber-500/20 p-1.5 rounded-lg">
-                                                                <AlertTriangle size={20} />
-                                                            </div>
-                                                            <div>
-                                                                <h5 className="font-bold text-amber-900 dark:text-amber-300 mb-1.5">Indikator Aturan 80/20</h5>
-                                                                <p className="text-sm text-amber-800/80 dark:text-amber-400/80 leading-relaxed">
-                                                                    <strong className="text-amber-700 dark:text-amber-200">{top80Count} jenis cacat teratas</strong> menyumbang sekitar <strong className="text-amber-700 dark:text-amber-200">{top80Percent}%</strong> dari seluruh masalah produksi dan komplain. Fokus perbaikan pada area ini akan memberikan dampak penyelesaian (ROI) tertinggi bagi perusahaan.
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200/60 dark:border-blue-700/50 rounded-2xl p-5 flex items-start gap-4">
-                                                            <div className="mt-0.5 text-blue-500 dark:text-blue-400 bg-blue-100/50 dark:bg-blue-500/20 p-1.5 rounded-lg">
-                                                                <Info size={20} />
-                                                            </div>
-                                                            <div>
-                                                                <h5 className="font-bold text-blue-900 dark:text-blue-300 mb-1.5">Tentang Prinsip Pareto</h5>
-                                                                <p className="text-sm text-blue-800/80 dark:text-blue-400/80 leading-relaxed">
-                                                                    Prinsip Pareto menyatakan bahwa ~80% masalah disebabkan oleh 20% penyebab utama. Garis kumulatif (warna kuning pada grafik) yang melewati garis batas 80% menandai kategori prioritas <i>"vital few"</i> yang harus segera ditangani.
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </>
-                                        )}
-                                    </div>
+                                    <ItemParetoChart startDate={startDate} endDate={endDate} />
                                 )}
 
                                 {/* DATASET */}
