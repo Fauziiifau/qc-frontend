@@ -28,7 +28,7 @@ function Login() {
 
             if (token) {
                 localStorage.setItem('jwt_token', token);
-                const userRole = response.data.role || 'ADMIN';
+                const userRole = response.data.role || 'OPERATOR';
                 localStorage.setItem('user_role', userRole);
                 const displayName = response.data.fullName || response.data.username || username;
                 localStorage.setItem('username', displayName);

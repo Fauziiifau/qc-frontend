@@ -18,3 +18,24 @@ export const deleteMasterDefect = (id) => api.delete(`/defects/${id}`);
 // Backward-compat aliases
 export const getAllDefectTypes = getMasterDefects;
 export const getAllDefects = getMasterDefects;
+
+// MASTER PROSES PRODUKSI
+// API Spring Boot -> public.production_processes
+
+export const getMasterProcesses = () =>
+  api.get('/production-processes').then(res => res.data);
+
+export const getActiveProcesses = () =>
+  api.get('/production-processes/active').then(res => res.data);
+
+export const saveMasterProcess = (processName) =>
+  api.post('/production-processes', { processName })
+    .then(res => res.data);
+
+export const renameMasterProcess = (id, processName) =>
+  api.put(`/production-processes/${id}`, { processName })
+    .then(res => res.data);
+
+export const setMasterProcessActive = (id, isActive) =>
+  api.patch(`/production-processes/${id}/status`, { isActive })
+    .then(res => res.data);

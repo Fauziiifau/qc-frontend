@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import { Search, Save, CheckCircle, Plus, Trash2 } from 'lucide-react'; // Tambahkan Plus dan Trash2
 import { saveBatchProduction } from '../services/productionService';
-import { getAllParts, getMasterMachines } from '../services/masterDataService';
+import { getAllParts, getMasterMachines, getActiveProcesses } from '../services/masterDataService';
 
 const getTodayDate = () => new Date().toISOString().split('T')[0];
 
@@ -11,6 +11,7 @@ function InputProduction() {
     const [isFetchingMaster, setIsFetchingMaster] = useState(true);
     const [allMasterParts, setAllMasterParts] = useState([]);
     const [allMasterMachines, setAllMasterMachines] = useState([]);
+    const [allMasterProcesses, setAllMasterProcesses] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [confirmModal, setConfirmModal] = useState(false);
     const [header, setHeader] = useState({
@@ -25,11 +26,12 @@ function InputProduction() {
         const fetchMasterData = async () => {
             setIsFetchingMaster(true);
             try {
-                const [parts, machines] = await Promise.all([
-                    getAllParts(), getMasterMachines()
+                const [parts, machines, processes] = await Promise.all([
+                    getAllParts(), getMasterMachines(), getActiveProcesses()
                 ]);
                 setAllMasterParts(parts || []);
                 setAllMasterMachines(machines || []);
+                setAllMasterProcesses(processes || []);
                 initializeGrid('Stamping', machines || []);
             } catch (error) {
                 toast.error("Gagal memuat master data.");
@@ -268,17 +270,9 @@ function InputProduction() {
                                                 <td className="px-6 py-4 text-center">
                                                     <select className="w-full p-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-slate-800 dark:text-white disabled:opacity-40 disabled:bg-slate-100 dark:disabled:bg-slate-900" value={part.processName} onChange={(e) => handleGridChange(realIndex, pIndex, 'processName', e.target.value)} disabled={!needsProcess}>
                                                         <option value="">- Proses -</option>
-                                                        {needsProcess && (
-                                                            <>
-                                                                <option value="Blank">Blank</option>
-                                                                <option value="Bending">Bending</option>
-                                                                <option value="Piercing">Piercing</option>
-                                                                <option value="Restrik">Restrik</option>
-                                                                <option value="Marking">Marking</option>
-                                                                <option value="Notching">Notching</option>
-                                                                <option value="Cutting">Cutting</option>
-                                                            </>
-                                                        )}
+                                                        {needsProcess && allMasterProcesses.map(proses => (
+                                                            <option key={proses.id} value={proses.processName}>{proses.processName}</option>
+                                                        ))}
                                                     </select>
                                                 </td>
                                                 <td className="px-4 py-4">
