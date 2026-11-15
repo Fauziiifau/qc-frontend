@@ -39,11 +39,24 @@ function Login() {
                 toast.error("Format token dari server tidak dikenali.");
             }
         } catch (error) {
-            console.error("Login error:", error);
-            if (error.response && error.response.status === 401) {
-                toast.error("Login Gagal! Username atau Password salah.");
+            const status = error.response?.status;
+            // Jangan tampilkan password/token dalam console.
+            console.error('Login gagal:', { status, code: error.code, url: error.config?.baseURL });
+
+            if (status === 401) {
+                toast.error('Username atau password salah.');
+            } else if (status === 403) {
+                toast.error('Akses login ditolak (403). Periksa CORS/Spring Security serta Network > OPTIONS/POST.');
+            } else if (status === 400) {
+                toast.error('Data login tidak valid (400). Periksa username dan password.');
+            } else if (status >= 500) {
+                toast.error('Backend mengalami gangguan (5xx). Periksa log IntelliJ dan koneksi database.');
+            } else if (error.code === 'ECONNABORTED') {
+                toast.error('Backend tidak merespons tepat waktu. Periksa koneksi Supabase.');
+            } else if (!error.response) {
+                toast.error('Tidak ada respons dari backend. Periksa server, URL API, dan CORS.');
             } else {
-                toast.error("Gagal terhubung ke server backend.");
+                toast.error(`Login gagal (HTTP ${status}).`);
             }
         } finally {
             setIsLoading(false);
