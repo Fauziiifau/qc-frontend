@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
-import { PenTool, Box, MessageSquare, Database, FileText, AlignLeft, X, User, Settings, LogOut, LayoutDashboard, ChevronDown } from 'lucide-react';
+import { PenTool, MessageSquare, Database, FileText, AlignLeft, X, User, Settings, LogOut, LayoutDashboard, ChevronDown } from 'lucide-react';
 import LogoGambar from '../images/LogoQCMDAS.png';
 
 function Layout() {
@@ -177,10 +177,6 @@ function Layout() {
           <Link to="/input-defect" onClick={closeSidebar} className={`flex items-center gap-3 px-4 py-4 rounded-xl font-semibold transition-all ${location.pathname === '/input-defect' ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/20' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}>
             <PenTool size={20} />
             Input Defect
-          </Link>
-          <Link to="/input-production" onClick={closeSidebar} className={`flex items-center gap-3 px-4 py-4 rounded-xl font-semibold transition-all ${location.pathname === '/input-production' ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/20' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}>
-            <Box size={20} />
-            Input Produksi
           </Link>
           <Link to="/input-complaint" onClick={closeSidebar} className={`flex items-center gap-3 px-4 py-4 rounded-xl font-semibold transition-all ${location.pathname === '/input-complaint' ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/20' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}>
             <MessageSquare size={20} />

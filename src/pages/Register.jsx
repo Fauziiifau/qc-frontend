@@ -7,8 +7,7 @@ function Register() {
     const [formData, setFormData] = useState({
         fullName: '',
         username: '',
-        password: '',
-        role: 'OPERATOR'
+        password: ''
     });
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
@@ -25,8 +24,7 @@ function Register() {
             await api.post('/auth/register', {
                 fullName: formData.fullName,
                 username: formData.username,
-                password: formData.password,
-                role: formData.role
+                password: formData.password
             });
 
             toast.success("Akun berhasil dibuat! Silakan Login.");
@@ -81,17 +79,7 @@ function Register() {
                             onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                         />
                     </div>
-                    <div>
-                        <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 ml-1">Hak Akses (Role)</label>
-                        <select
-                            className="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none font-semibold text-slate-700 cursor-pointer"
-                            onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                            value={formData.role}
-                        >
-                            <option value="OPERATOR">Operator (Hanya Input Data)</option>
-                            <option value="ADMIN">Admin (Akses Laporan & Master Data)</option>
-                        </select>
-                    </div>
+                    <p className="text-xs text-slate-500">Akun baru mendapatkan hak akses OPERATOR. Hubungi administrator untuk akses ADMIN.</p>
 
                     <button
                         type="submit" disabled={isLoading}

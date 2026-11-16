@@ -6,7 +6,6 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Layout from './components/Layout';
 import InputDefect from './pages/InputDefect';
-import InputProduction from './pages/InputProduction';
 import InputComplaint from './pages/InputComplaint';
 import MasterData from './pages/MasterData';
 import Reports from './pages/Reports';
@@ -29,7 +28,8 @@ function App() {
           }>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/input-defect" element={<InputDefect />} />
-            <Route path="/input-production" element={<InputProduction />} />
+            {/* Input Produksi hanya tersedia di aplikasi mobile. URL lama dialihkan. */}
+            <Route path="/input-production" element={<Navigate to="/dashboard" replace />} />
             <Route path="/input-complaint" element={<InputComplaint />} />
             <Route path="/master-data" element={<MasterData />} />
             <Route path="/reports" element={<Reports />} />

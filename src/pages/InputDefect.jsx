@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import { Search, X, Camera, Save } from 'lucide-react';
 import { saveDefectData, uploadPhoto } from '../services/ngDataService';
-import { getAllParts, getAllDefectTypes } from '../services/masterDataService';
+import { getAllParts, getAllDefectTypes, getActiveProcesses } from '../services/masterDataService';
 
 const getTodayDate = () => new Date().toISOString().split('T')[0];
 
@@ -25,23 +25,19 @@ function InputDefect() {
 
   const [partOptions, setPartOptions] = useState([]);
   const [defectTypeOptions, setDefectTypeOptions] = useState([]);
-  const prosesOptions = [
-    "Bending",
-    "Blank",
-    "Welding Manual",
-    "Welding Robot",
-    "Welding Spot"
-  ];
+  const [prosesOptions, setProsesOptions] = useState([]);
 
   useEffect(() => {
     const fetchMasterData = async () => {
       try {
-        const [parts, defects] = await Promise.all([
+        const [parts, defects, processes] = await Promise.all([
           getAllParts(),
-          getAllDefectTypes()
+          getAllDefectTypes(),
+          getActiveProcesses()
         ]);
         setPartOptions(parts || []);
         setDefectTypeOptions(defects || []);
+        setProsesOptions(processes || []);
       } catch (error) {
         toast.error("Gagal mengambil data master dari server.");
       }
@@ -181,8 +177,8 @@ function InputDefect() {
                 required
               >
                 <option value="">-- Pilih Proses --</option>
-                {prosesOptions.map((proses, idx) => (
-                  <option key={idx} value={proses}>{proses}</option>
+                {prosesOptions.map(proses => (
+                  <option key={proses.id} value={proses.processName}>{proses.processName}</option>
                 ))}
               </select>
             </div>
