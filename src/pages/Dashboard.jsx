@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
     Target, AlertTriangle, Loader2, TrendingUp, TrendingDown, Factory, Database, MessageSquare,
-    BarChart3, Wand2, ListFilter, Star, Bug, CheckCircle, Info, Cpu
+    BarChart3, Wand2, Star, Bug, CheckCircle, Info, Cpu
 } from 'lucide-react';
 import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid,
@@ -244,11 +244,8 @@ function Dashboard() {
         ? Math.round(activeProductionDays.reduce((acc, curr) => acc + curr.produced, 0) / activeProductionDays.length)
         : 0;
 
-    const currentParetoData = activeDataset === 'internal' ? pareto : complaintPareto;
     const currentTotal = activeDataset === 'internal' ? kpi.totalNg : totalComplaints;
     const currentLabel = activeDataset === 'internal' ? 'Cacat Internal' : 'Komplain';
-    const grandTotalQuantity = currentParetoData.reduce((sum, item) => sum + (item.totalQuantity || 0), 0);
-    let runningTotalQty = 0;
 
     const dataGrafik = productionData.map(item => ({
         ...item,
@@ -435,15 +432,12 @@ function Dashboard() {
                                         </span>
                                     </div>
                                     <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-                                        {activeDefectTab === 'chart' ? 'Peringkat item berdasarkan jumlah jenis defect atau total NG' : `Rincian lengkap untuk dataset ${currentLabel}`}
+                                        {activeDefectTab === 'chart' ? 'Peringkat kombinasi part dan jenis defect berdasarkan jumlah NG (pcs)' : `Rincian lengkap untuk dataset ${currentLabel}`}
                                     </p>
                                 </div>
                                 <div className="flex items-center gap-1 bg-slate-50 dark:bg-slate-900/50 p-1 rounded-xl border border-slate-100 dark:border-slate-700">
                                     <button onClick={() => setActiveDefectTab('chart')} className={`px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 transition-colors ${activeDefectTab === 'chart' ? 'bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm border border-slate-100 dark:border-slate-600' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'}`}>
                                         <BarChart3 size={16} /> Grafik
-                                    </button>
-                                    <button onClick={() => setActiveDefectTab('data')} className={`px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 transition-colors ${activeDefectTab === 'data' ? 'bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm border border-slate-100 dark:border-slate-600' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'}`}>
-                                        <ListFilter size={16} /> Data
                                     </button>
                                     <button onClick={() => setActiveDefectTab('insight')} className={`px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 transition-colors ${activeDefectTab === 'insight' ? 'bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm border border-slate-100 dark:border-slate-600' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'}`}>
                                         <Wand2 size={16} /> Insight & AI ML
@@ -454,69 +448,6 @@ function Dashboard() {
                             <div className="p-4 md:p-6">
                                 {activeDefectTab === 'chart' && (
                                     <ItemParetoChart startDate={startDate} endDate={endDate} />
-                                )}
-
-                                {/* DATASET */}
-                                {activeDefectTab === 'data' && (
-                                    <div>
-                                        <div className="mb-6 flex items-start justify-between">
-                                            <div>
-                                                <h4 className="text-lg font-bold text-slate-800 dark:text-white">Tabel Analisis Data</h4>
-                                                <p className="text-sm text-slate-500 dark:text-slate-400">Breakdown data untuk {currentLabel} yang diurutkan berdasarkan frekuensi</p>
-                                            </div>
-                                        </div>
-
-                                        <div className="overflow-x-auto rounded-xl border border-slate-100 dark:border-slate-700">
-                                            <table className="w-full text-sm text-left">
-                                                <thead className="bg-slate-50/50 dark:bg-slate-800/80 text-slate-500 dark:text-slate-400 font-semibold border-b border-slate-100 dark:border-slate-700 text-xs tracking-wider">
-                                                    <tr>
-                                                        <th className="px-6 py-4">PERINGKAT</th>
-                                                        <th className="px-6 py-4">KATEGORI MASALAH</th>
-                                                        <th className="px-6 py-4">NAMA PART</th>
-                                                        <th className="px-6 py-4">JUMLAH</th>
-                                                        <th className="px-6 py-4 w-48">PROPORSI</th>
-                                                        <th className="px-6 py-4">KUMULATIF %</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody className="divide-y divide-slate-50 dark:divide-slate-700/50">
-                                                    {currentParetoData.map((item, idx) => {
-                                                        const rank = idx + 1;
-                                                        runningTotalQty += (item.totalQuantity || 0);
-
-                                                        const sharePercent = grandTotalQuantity > 0 ? ((item.totalQuantity / grandTotalQuantity) * 100).toFixed(1) : 0;
-                                                        const cumPercent = grandTotalQuantity > 0 ? ((runningTotalQty / grandTotalQuantity) * 100).toFixed(1) : 0;
-
-                                                        const barColor = activeDataset === 'internal' ? 'bg-blue-500' : 'bg-rose-500';
-
-                                                        return (
-                                                            <tr key={idx} className="hover:bg-slate-50/50 dark:hover:bg-slate-700/30 transition-colors">
-                                                                <td className="px-6 py-4">
-                                                                    <div className="w-6 h-6 rounded-md bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center text-xs font-bold">{rank}</div>
-                                                                </td>
-                                                                <td className="px-6 py-4 font-bold text-slate-800 dark:text-slate-200">{item.defectName}</td>
-                                                                <td className="px-6 py-4 text-slate-600 dark:text-slate-400 font-medium">{item.partName || '-'}</td>
-                                                                <td className="px-6 py-4 text-slate-600 dark:text-slate-400 font-bold">{item.totalQuantity}</td>
-                                                                <td className="px-6 py-4">
-                                                                    <div className="flex items-center gap-3 w-full">
-                                                                        <div className="flex-1 h-1.5 rounded-full bg-slate-100 dark:bg-slate-700 overflow-hidden">
-                                                                            <div className={`h-full rounded-full ${barColor}`} style={{ width: `${sharePercent}%` }}></div>
-                                                                        </div>
-                                                                        <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 w-10">{sharePercent}%</span>
-                                                                    </div>
-                                                                </td>
-                                                                <td className="px-6 py-4 font-bold text-amber-600 dark:text-amber-400">{item.cumulativePercentage || cumPercent}%</td>
-                                                            </tr>
-                                                        );
-                                                    })}
-                                                    {currentParetoData.length === 0 && (
-                                                        <tr>
-                                                            <td colSpan="6" className="px-6 py-8 text-center text-slate-400 dark:text-slate-500 italic">Data untuk dataset ini belum tersedia.</td>
-                                                        </tr>
-                                                    )}
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
                                 )}
 
                                 {/* AI INSIGHTS & ML ENGINE (UNIFIED REPORT) */}
