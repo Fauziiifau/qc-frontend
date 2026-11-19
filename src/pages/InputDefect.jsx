@@ -18,6 +18,7 @@ function InputDefect() {
     defectTypeId: '',
     proses: '',
     quantity: '',
+    shift: '',
     operatorName: '',
     remarks: '',
     defectDate: getTodayDate()
@@ -95,7 +96,7 @@ function InputDefect() {
       await saveDefectData(formData, uploadedFileName);
 
       toast.success("Berhasil! Data NG produksi dan foto telah tersimpan.");
-      setFormData({ partId: '', defectTypeId: '', proses: '', quantity: '', operatorName: '', remarks: '', defectDate: getTodayDate() });
+      setFormData({ partId: '', defectTypeId: '', proses: '', quantity: '', shift: '', operatorName: '', remarks: '', defectDate: getTodayDate() });
       setSearchPart('');
       removePhoto();
     }
@@ -173,7 +174,15 @@ function InputDefect() {
               <select
                 className="w-full p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-slate-800 dark:text-white cursor-pointer"
                 value={formData.proses}
-                onChange={(e) => setFormData({ ...formData, proses: e.target.value })}
+                onChange={(e) => {
+                  const selectedProcess = e.target.value;
+                  const isWeldingRobot = selectedProcess.toLowerCase().includes('welding robot');
+                  setFormData((prev) => ({
+                    ...prev,
+                    proses: selectedProcess,
+                    shift: prev.shift === 'Shift 3' && !isWeldingRobot ? '' : prev.shift
+                  }));
+                }}
                 required
               >
                 <option value="">-- Pilih Proses --</option>
@@ -193,11 +202,27 @@ function InputDefect() {
               <input type="date" className="w-full p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none cursor-pointer text-slate-800 dark:text-white" value={formData.defectDate} onChange={(e) => setFormData({ ...formData, defectDate: e.target.value })} required />
             </div>
             <div>
+              <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Shift *</label>
+              <select
+                className="w-full p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-slate-800 dark:text-white cursor-pointer"
+                value={formData.shift}
+                onChange={(e) => setFormData({ ...formData, shift: e.target.value })}
+                required
+              >
+                <option value="">-- Pilih Shift --</option>
+                <option value="Shift 1">Shift 1</option>
+                <option value="Shift 2">Shift 2</option>
+                {formData.proses.toLowerCase().includes('welding robot') && (
+                  <option value="Shift 3">Shift 3</option>
+                )}
+              </select>
+            </div>
+            <div>
               <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Nama Operator *</label>
               <input type="text" className="w-full p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-slate-800 dark:text-white" placeholder="Nama Operator Produksi" value={formData.operatorName} onChange={(e) => setFormData({ ...formData, operatorName: e.target.value })} required />
             </div>
 
-            <div className="md:col-span-2">
+            <div>
               <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Catatan Tambahan</label>
               <input type="text" className="w-full p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-slate-800 dark:text-white" placeholder="Detail lokasi cacat..." value={formData.remarks} onChange={(e) => setFormData({ ...formData, remarks: e.target.value })} />
             </div>

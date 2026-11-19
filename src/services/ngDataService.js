@@ -21,6 +21,7 @@ export const saveDefectData = async (formData, photoFileName) => {
       partId: parseInt(formData.partId),
       defectTypeId: parseInt(formData.defectTypeId),
       proses: formData.proses,
+      shift: formData.shift,
       quantity: parseInt(formData.quantity),
       operatorName: formData.operatorName,
       remarks: formData.remarks,

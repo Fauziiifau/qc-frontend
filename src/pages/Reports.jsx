@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import api from '../api/axiosConfig';
+import HistoryTable from '../components/HistoryTable';
+
+const localDate = (d) => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 
 function Reports() {
     const [isLoading, setIsLoading] = useState(false);
     const [formData, setFormData] = useState({
-        startDate: '',
-        endDate: '',
-        reportType: 'defect',
+        startDate: localDate(new Date(Date.now() - 7 * 86400000)),
+        endDate: localDate(new Date()),
+        reportType: 'production',
         format: 'pdf',
         includePhotos: true,
     });
@@ -86,88 +89,58 @@ function Reports() {
     const hasPhotoOption = formData.reportType === 'defect';
 
     return (
-        <div className="p-6 md:p-8">
-            <div className="max-w-4xl mx-auto space-y-6">
-                <div className="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 transition-all">
-                    <h1 className="text-2xl font-bold text-slate-800 dark:text-white tracking-tight">
-                        Export Laporan Defect Product dan Laporan Produksi
-                    </h1>
-                    <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-                        Ekspor laporan berdasarkan tanggal; foto hanya ditambahkan ke file laporan, bukan ditampilkan di website.
-                    </p>
-                </div>
-
-                <div className="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 transition-all">
-                    <h2 className="text-lg font-bold text-slate-800 dark:text-white mb-6">Generate Custom Report</h2>
-                    <form onSubmit={handleDownload} className="space-y-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label htmlFor="startDate" className="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-2">Start Date</label>
-                                <input id="startDate" type="date" name="startDate" value={formData.startDate} onChange={handleChange}
-                                    className="w-full p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none cursor-pointer text-slate-700 dark:text-slate-200"
-                                    required />
-                            </div>
-                            <div>
-                                <label htmlFor="endDate" className="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-2">End Date</label>
-                                <input id="endDate" type="date" name="endDate" value={formData.endDate} onChange={handleChange}
-                                    className="w-full p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none cursor-pointer text-slate-700 dark:text-slate-200"
-                                    required />
-                            </div>
-                        </div>
-                        <div>
-                            <label htmlFor="reportType" className="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-2">Report Type</label>
-                            <select id="reportType" name="reportType" value={formData.reportType} onChange={handleChange}
-                                className="w-full p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-600 rounded-xl outline-none text-slate-700 dark:text-slate-200 font-semibold">
-                                <option value="defect">Laporan Defect (Internal & Komplain Customer)</option>
-                                <option value="production">Laporan Produksi</option>
-                            </select>
-                        </div>
-                        <fieldset>
-                            <legend className="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-3">Format Laporan</legend>
-                            <div className="flex flex-col sm:flex-row gap-4 sm:gap-8">
-                                {[
-                                    ['pdf', 'PDF Document'],
-                                    ['excel', 'Excel Spreadsheet'],
-                                    ['csv', 'CSV Data'],
-                                ].map(([value, title]) => (
-                                    <label key={value} className="flex items-center gap-3 cursor-pointer p-2 pr-4 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
-                                        <input type="radio" name="format" value={value} checked={formData.format === value}
-                                            onChange={handleChange} className="w-4 h-4 accent-blue-600" />
-                                        <span className="text-sm font-bold text-slate-700 dark:text-slate-200">{title}</span>
-                                    </label>
-                                ))}
-                            </div>
-                        </fieldset>
-                        {hasPhotoOption ? (
-                            <div className="rounded-xl border border-blue-200 dark:border-blue-800 bg-blue-50/50 dark:bg-blue-900/20 p-4">
-                                <label className="flex items-center gap-3 cursor-pointer">
-                                    <input type="checkbox" name="includePhotos" checked={formData.includePhotos} onChange={handleChange}
-                                        className="h-5 w-5 accent-blue-600" />
-                                    <span className="text-sm font-bold text-slate-800 dark:text-slate-100">Sertakan Bukti Foto</span>
-                                </label>
-                                <p className="mt-2 text-xs text-slate-600 dark:text-slate-300">
-                                    {formData.format === 'csv'
-                                        ? 'CSV menyimpan path/nama foto sebagai teks, bukan gambar di dalam file.'
-                                        : 'Foto tersedia akan disisipkan langsung ke dokumen Excel atau lampiran PDF.'}
-                                    {' '}Data tanpa foto tetap diekspor.
-                                </p>
-                            </div>
-                        ) : (
-                            <p className="text-sm text-amber-700 dark:text-amber-300 rounded-xl bg-amber-50 dark:bg-amber-900/20 p-4">
-                                Foto khusus produksi belum dapat disertakan karena tabel production_data belum menyimpan referensi foto.
-                            </p>
-                        )}
-                        <div className="pt-6 mt-6 border-t border-slate-100 dark:border-slate-700 flex items-center gap-4">
-                            <button type="submit" disabled={isLoading}
-                                className="flex items-center justify-center gap-2 bg-blue-600 text-white font-bold px-8 py-3.5 rounded-xl hover:bg-blue-700 active:scale-95 transition-all shadow-md disabled:opacity-70 disabled:cursor-not-allowed">
-                                {isLoading && <span className="animate-spin border-2 border-white/30 border-t-white rounded-full w-5 h-5" />}
-                                {isLoading ? 'Generating...' : 'Generate & Download'}
-                            </button>
-                        </div>
-                    </form>
-                </div>
+      <div className="p-4 md:p-8">
+        <div className="max-w-7xl mx-auto space-y-6">
+          <header className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700">
+            <h1 className="text-2xl font-bold text-slate-800 dark:text-white">Riwayat dan Export Laporan</h1>
+          </header>
+          <section className="bg-white dark:bg-slate-800 p-5 md:p-7 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-5">
+            <div className="grid sm:grid-cols-2 gap-4">
+              <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Dari Tanggal
+                <input type="date" name="startDate" value={formData.startDate} onChange={handleChange} required
+                  className="block w-full mt-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 p-3" />
+              </label>
+              <label className="text-sm font-semibold text-slate-700 dark:text-slate-200">Sampai Tanggal
+                <input type="date" name="endDate" value={formData.endDate} onChange={handleChange} required
+                  className="block w-full mt-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 p-3" />
+              </label>
             </div>
+            <div className="flex flex-wrap gap-2" role="tablist" aria-label="Jenis riwayat">
+              {[['production','Riwayat Produksi'],['defect','Riwayat Defect']].map(([value,label])=>(
+                <button key={value} type="button" role="tab" aria-selected={formData.reportType===value}
+                  onClick={()=>setFormData(old=>({...old,reportType:value}))}
+                  className={`px-5 py-3 rounded-xl font-semibold ${formData.reportType===value ? 'bg-blue-600 text-white' : 'bg-slate-100 dark:bg-slate-700 dark:text-white'}`}>{label}</button>
+              ))}
+            </div>
+            <HistoryTable type={formData.reportType} startDate={formData.startDate} endDate={formData.endDate} />
+          </section>
+          <section className="bg-white dark:bg-slate-800 p-5 md:p-7 rounded-2xl border border-slate-200 dark:border-slate-700">
+            <h2 className="text-xl font-bold text-slate-800 dark:text-white mb-2">Export Laporan {formData.reportType==='defect'?'Defect':'Produksi'}</h2>
+            <form onSubmit={handleDownload} className="space-y-5">
+              <fieldset>
+                <legend className="font-semibold text-sm text-slate-700 dark:text-slate-200 mb-3">Pilih Jenis Laporan</legend>
+                <div className="flex flex-wrap gap-5">
+                  {[['pdf','PDF'],['excel','Excel'],['csv','CSV']].map(([value,label])=>(
+                    <label key={value} className="flex items-center gap-2 cursor-pointer dark:text-slate-200">
+                      <input type="radio" name="format" value={value} checked={formData.format===value} onChange={handleChange} /> {label}
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
+              {hasPhotoOption&&<label className="flex items-center gap-3 text-sm font-semibold dark:text-slate-200">
+                <input type="checkbox" name="includePhotos" checked={formData.includePhotos} onChange={handleChange} />
+                Sertakan Bukti Foto {formData.format==='csv'?'(referensi file)': '(Excel/PDF)'}
+              </label>}
+              <button disabled={isLoading || !formData.startDate || !formData.endDate || formData.startDate>formData.endDate}
+                type="submit" className="px-6 py-3 bg-blue-600 text-white font-bold rounded-xl disabled:opacity-50">
+                {isLoading?'Generating...':'Generate & Download'}
+              </button>
+            </form>
+          </section>
+          {formData.reportType==='defect'&&<p className="text-xs text-slate-500">Riwayat Defect menampilkan NG internal. Endpoint export V2 saat ini dapat pula menyertakan Customer Complaint sesuai implementasi sebelumnya.</p>}
         </div>
+      </div>
     );
 }
+
 export default Reports;
